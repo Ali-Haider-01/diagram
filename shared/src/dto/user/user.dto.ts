@@ -52,15 +52,6 @@ export class EmailDto {
   email!: string;
 }
 
-export class RefreshTokenDto {
-  @IsString()
-  @ApiProperty({
-    example: 'Access refresh token',
-    type: String,
-  })
-  token!: string;
-}
-
 export class ForgotPasswordDto {
   @IsEmail()
   @ApiProperty({
