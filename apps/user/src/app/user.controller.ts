@@ -20,11 +20,17 @@ const {
   GET_PROFILE,
   CHANGE_PASSWORD,
   LOG_OUT,
+  GET_ALL_USER,
 } = MESSAGE_PATTERNS.USER;
 
 @Controller()
 export class UserController {
   constructor(private readonly userService: UserService) { }
+
+  @MessagePattern(GET_ALL_USER)
+  getAllUser(@Payload() payload) {
+    return this.userService.getAllUser(payload);
+  }
 
   @MessagePattern(SIGN_UP)
   signUp(userDto: UserDto) {

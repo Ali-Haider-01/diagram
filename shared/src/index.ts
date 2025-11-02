@@ -3,4 +3,6 @@ export * from './guards';
 export * from './dto';
 export * from './schema';
 export * from './repository';
-export { SharedModule } from './shared.module';
+export * from './utils';
+export * from './common/dto';
+export * from './interceptors';

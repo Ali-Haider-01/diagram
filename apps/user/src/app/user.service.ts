@@ -1,10 +1,11 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserRepository } from '@diagram/shared';
+import { ResponseMessage, successResponse, UserRepository } from '@diagram/shared';
 import { Types } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -23,6 +24,34 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
+    async getAllUser(UserDto: any): Promise<any> {
+    return this.userRepository.aggregate([
+      {
+        $match: {
+          ...(UserDto.name && {name: UserDto.name}),
+          ...(UserDto.email && { email: UserDto.email }),
+          ...(UserDto.phoneNumber && { phoneNumber: UserDto.phoneNumber }),
+          ...(UserDto.status && { status: UserDto.status }),
+          age: {
+            $gte: UserDto.minAge || 0,
+            $lte: UserDto.maxAge || Number.MAX_SAFE_INTEGER,
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          age: 1,
+          email: 1,
+          address: 1,
+          phoneNumber: 1,
+          status:1,
+        },
+      },
+    ]);
+  }
+
 
   async signUp(userDto: UserDto) {
     const hash = await bcrypt.hash(userDto.password, 10);
@@ -31,6 +60,9 @@ export class UserService {
       name: userDto.name,
       phoneNumber: userDto.phoneNumber,
       email: userDto.email,
+      status:userDto.status,
+      age: userDto.age,
+      address: userDto.address,
       password: hash,
     } as any);
   }
@@ -46,15 +78,18 @@ export class UserService {
         $project: {
           _id: 1,
           name: 1,
-          phoneNumber: 1,
+          age: 1,
           email: 1,
+          address: 1,
+          phoneNumber: 1,
+          status:1,
         },
       },
     ]);
     if (!user || user.length === 0) {
       throw new NotFoundException('User not found');
     }
-    return { user };
+  return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, user);
   }
 
   async generateOTP(emailDto: EmailDto) {
@@ -68,7 +103,7 @@ export class UserService {
       { email: emailDto.email },
       { $set: { otp, otpGenerateTime } },
     );
-    return { message: 'OTP Generated' };
+    return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, 'OTP Generated');
   }
 
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
@@ -89,7 +124,7 @@ export class UserService {
       { email: forgotPasswordDto.email },
       { $set: { password: hashNewPassword }, $unset: { otp: 1, otpGenerateTime: 1 } },
     );
-    return { message: 'New password generated successfully' };
+    return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, 'New password generated successfully'); 
   }
 
   async logIn(logInDto: LogInDto) {
@@ -101,6 +136,9 @@ export class UserService {
       const isMatch = await bcrypt.compare(logInDto.password, user?.password);
       if (!isMatch) {
         throw new UnauthorizedException('password is incorrect');
+      }
+        if (user.status === 'INACTIVE') {
+        throw new UnauthorizedException('User is InActive');
       }
       const access_token = this.jwtService.sign(
         { email: user.email, userId: user._id },
@@ -116,12 +154,11 @@ export class UserService {
         { email: logInDto.email },
         { $set: { refreshToken: hashedRefreshToken, accessToken: hashedAccessToken } },
       );
-      return { access_token, refresh_token };
+      return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, {access_token, refresh_token });
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof UnauthorizedException) {
         throw error;
       }
-      console.error('Login error:', error);
       throw new BadRequestException('Login failed due to server error');
     }
   }
@@ -143,7 +180,7 @@ export class UserService {
       { email: email },
       { $set: { password: hashNewPassword } },
     );
-    return { message: 'Password updated successfully' };
+    return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, 'Password updated successfully');
   }
 
 
@@ -154,6 +191,6 @@ export class UserService {
       { email },
       { $unset: { refreshToken: 1, accessToken: 1 } },
     );
-    return { message: 'Logged out successfully' };
+    return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, 'Logged out successfully');
   }
 }

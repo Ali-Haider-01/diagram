@@ -29,6 +29,7 @@ import {
     GET_PROFILE,
     CHANGE_PASSWORD,
     LOG_OUT,
+    GET_ALL_USER,
   } = MESSAGE_PATTERNS.USER;
   
   @ApiTags('user')
@@ -86,6 +87,18 @@ import {
         return await firstValueFrom(this.userClient.send(GET_PROFILE, req.user));
       } catch (error) {
         console.error('Gateway getProfile error:', error);
+        throw error;
+      }
+    }
+
+        @ApiBearerAuth()
+    @Auth()
+    @Get('/get-all-user')
+    async getAllUser(@Request() req) {
+      try {
+        return await firstValueFrom(this.userClient.send(GET_ALL_USER, req.user));
+      } catch (error) {
+        console.error('Gateway getAllUser error:', error);
         throw error;
       }
     }
