@@ -1,11 +1,12 @@
 import {
   Controller,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from '../services/user.service';
 import {
   ChangePasswordDto,
   EmailDto,
   ForgotPasswordDto,
+  GetUserDto,
   LogInDto,
   MESSAGE_PATTERNS,
   UserDto,
@@ -28,8 +29,8 @@ export class UserController {
   constructor(private readonly userService: UserService) { }
 
   @MessagePattern(GET_ALL_USER)
-  getAllUser(@Payload() payload) {
-    return this.userService.getAllUser(payload);
+  getAllUser(@Payload() getUserDto: GetUserDto) {
+    return this.userService.getAllUser(getUserDto);
   }
 
   @MessagePattern(SIGN_UP)

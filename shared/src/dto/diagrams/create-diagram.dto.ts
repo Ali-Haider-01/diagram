@@ -10,13 +10,13 @@ export class CreateDiagramDto {
     example: 'Diagram Title',
     required: true,
   })
-  diagramName!: string;
+  name!: string;
 
   @IsNotEmpty()
   @ApiProperty({
     type: String,
     example: 'https://example.com/diagram',
-    required: true,
+    required: false,
   })
   url!: string;
 
@@ -51,13 +51,6 @@ export class CreateDiagramDto {
     required: true,
   })
   shortCode!: string;
-
-  @ApiProperty({
-    type: 'string',
-    format: 'binary',
-    required: false,
-  })
-  logoImage?: string;
 }
 
 export class CreateDiagramRequestResponse {
@@ -66,13 +59,12 @@ export class CreateDiagramRequestResponse {
   message!: string;
   @ApiProperty({
     example: {
-      _id: 'fe96e7cd-9d0f-4868-87a1-1532af1a14f3',
-      diagramName: 'Diagram Title',
+      _id: '690872ecc1c9e63aa21019d9',
+      name: 'Diagram Title',
       url: 'https://example.com/diagram',
       status: 'ACTIVE',
       slugs: ['diagram-title', 'diagram-title2'],
-      logoImage: 'https://example.com/image.png',
-      createdBy: '7e717689-51f7-4010-8fd6-f842721a4dc8',
+      createdBy: '690872ecc1c9e63aa21019d9',
       createdAt: '2025-07-04T06:48:45.877Z',
       updatedAt: '2025-07-04T06:48:45.877Z',
     },

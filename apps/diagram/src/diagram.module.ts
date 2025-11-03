@@ -4,8 +4,8 @@ import Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
-import { DiagramController } from './app/diagram.controller';
-import { DiagramService } from './app/diagram.service';
+import { DiagramController } from './app/controller/diagram.controller';
+import { DiagramService } from './app/services/diagram.service';
 
 const schemaObject = {
   // RMQ Configuration

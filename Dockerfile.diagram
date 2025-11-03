@@ -1,0 +1,8 @@
+FROM node:20-alpine
+
+RUN mkdir -p /var/www/diagram
+WORKDIR /var/www/diagram
+ADD . /var/www/diagram
+RUN npm install -f 
+RUN npx nx build diagram
+CMD ["node", "./dist/apps/diagram/main.js"]

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './app/user.controller';
-import { UserService } from './app/user.service';
 import { SERVICES, User, UserRepository, UserSchema } from '@diagram/shared';
 import Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
+import { UserController } from './app/controller/user.controller';
+import { UserService } from './app/services/user.service';
 
 const schemaObject = {
   // RMQ Configuration

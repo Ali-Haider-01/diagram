@@ -4,6 +4,7 @@ import { DIAGRAM_STATUS } from '../constant';
 
 @Schema({ versionKey: false })
 export class User extends AbstractSchema {
+  
   @Prop({ required: true })
   name!: string;
 

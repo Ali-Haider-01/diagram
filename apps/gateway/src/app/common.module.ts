@@ -6,6 +6,7 @@ import Joi from 'joi';
 import { SERVICES } from '@diagram/shared';
 import { UserController } from './common/controllers/user.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { DiagramController } from './common/controllers/diagram.controllers';
 
 
 const schemaObject = {
@@ -38,6 +39,7 @@ const schemaObject = {
   ],
   controllers: [
     UserController,
+    DiagramController,
   ],
   providers: [...SERVICE_PROVIDERS, ALL_SERVICE_PROVIDERS, JwtStrategy],
   exports: [...SERVICE_PROVIDERS],

@@ -1,8 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   ImportSlugsDto,
   CreateDiagramDto,
   IdDto,
+  toMongoObjectId,
 } from '@diagram/shared';
 import { DiagramRepository } from '@diagram/shared';
 import {
@@ -11,10 +12,28 @@ import {
   ResponseMessage,
 } from '@diagram/shared';
 import { buildDateRangeFilter } from '@diagram/shared';
-import { v4 } from 'uuid';
 
-function getUserLookup() {
+function getDiagramLookup() {
   return [
+    {
+      $lookup: {
+        from: 'users',
+        let: { createdByStr: '$createdBy' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $or: [
+                  { $eq: ['$_id', '$$createdByStr'] },
+                  { $eq: [{ $toString: '$_id' }, '$$createdByStr'] },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'createdBy',
+      },
+    },
     {
       $unwind: {
         path: '$createdBy',
@@ -24,18 +43,17 @@ function getUserLookup() {
     {
       $project: {
         _id: 1,
-        diagramName: 1,
+        name: 1,
         slugs: 1,
         status: 1,
-        logoImage: 1,
         createdAt: 1,
         updatedAt: 1,
         shortCode: 1,
         url: 1,
         'createdBy._id': 1,
-        'createdBy.firstName': 1,
-        'createdBy.lastName': 1,
+        'createdBy.name': 1,
         'createdBy.email': 1,
+        'createdBy.phoneNumber': 1,
       },
     },
   ];
@@ -48,13 +66,12 @@ export class DiagramService {
   ) {}
 
   private async validateDiagramInput({
-    diagramName,
+    name,
     slugs,
     url,
     shortCode,
-    excludeDiagramId,
   }: {
-    diagramName?: string;
+    name?: string;
     slugs?: string[];
     url?: string;
     shortCode?: string;
@@ -69,8 +86,8 @@ export class DiagramService {
 
     const orConditions: any[] = [];
 
-    if (diagramName) {
-      orConditions.push({ diagramName });
+    if (name) {
+      orConditions.push({ name });
     }
     if (url) {
       orConditions.push({ url });
@@ -82,16 +99,13 @@ export class DiagramService {
       return null;
     }
     const query: any = { $or: orConditions };
-    if (excludeDiagramId) {
-      query._id = { $ne: excludeDiagramId };
-    }
 
     const existing = await this.diagramRepository.findOne(query, undefined, {
       notFoundThrowError: false,
     });
 
     if (existing) {
-      if (diagramName && existing.diagramName === diagramName) {
+      if (name && existing.name === name) {
         return {
           status: HttpStatus.FORBIDDEN,
           message: 'Diagram name already exists.',
@@ -114,65 +128,76 @@ export class DiagramService {
     return null;
   }
 
-  /**
-   * Create diagram
-   * @param createDiagramDto
-   * @param chatUser
-   * @returns
-   */
   async create({
     createDiagramDto,
-    chatUser,
+    activeUser,
   }: {
     createDiagramDto: CreateDiagramDto;
-    chatUser: any;
+    activeUser: any;
   }) {
     try {
-      const { diagramName, slugs, url, shortCode } = createDiagramDto;
+      if (!activeUser || !activeUser.userId) {
+        return {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: 'User authentication required',
+          errors: null,
+          data: null,
+        };
+      }
+
+      const { name, slugs, url, shortCode } = createDiagramDto;
 
       const validationError = await this.validateDiagramInput({
-        diagramName,
+        name,
         slugs,
         url,
         shortCode,
       });
 
       if (validationError) {
-        return errorResponse(validationError.status, validationError.message);
+        return {
+          statusCode: validationError.status,
+          message: validationError.message,
+          errors: null,
+          data: null,
+        };
       }
       const diagram = await this.diagramRepository.create({
         ...createDiagramDto,
-        createdBy: chatUser.userId,
-        _id: v4(),
+        createdBy: activeUser.userId,
       });
       return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, diagram);
     } catch (err: any) {
-      return errorResponse(
-        err.status,
-        err.message,
-        err.errors
-      );
+      // Log the error for debugging
+      console.error('Error creating diagram:', err);
+      
+      const statusCode = err.status || err.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
+      const message = err.message || ResponseMessage.INTERNAL_SERVER_ERROR;
+      const errors = err.errors || err.response?.errors || null;
+      
+      // For microservices, return error object instead of throwing
+      return {
+        statusCode,
+        message,
+        errors,
+        data: null,
+      };
     }
   }
 
-  /**
-   * Get all diagram
-   * @param getDiagramDto
-   * @returns
-   */
   async findAll(getDiagramDto) {
     const { search, offset, limit, startDate, endDate, meta, userId } = getDiagramDto;
     const filterQuery = {};
 
     if (search) {
-      filterQuery['diagramName'] = { $regex: search, $options: 'i' };
+      filterQuery['name'] = { $regex: search, $options: 'i' };
     }
 
     const createdAtRange = buildDateRangeFilter(startDate, endDate);
     if (createdAtRange) filterQuery['createdAt'] = createdAtRange;
 
     if (userId) {
-      filterQuery['createdBy._id'] = userId;
+      filterQuery['createdBy'] = userId;
     }
 
     try {
@@ -180,7 +205,7 @@ export class DiagramService {
         offset,
         limit,
         filterQuery,
-        pipelines: getUserLookup(),
+        pipelines: getDiagramLookup(),
         all: !meta,
       });
       return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, diagrams);
@@ -193,14 +218,12 @@ export class DiagramService {
     }
   }
 
-  /**
-   * Get single diagram
-   * @param payload
-   * @returns
-   */
   async findOne(payload) {
-    const { id } = payload;
-    const pipeline = [{ $match: { _id: id } }, ...getUserLookup()];
+    const mongoId = toMongoObjectId({ value: payload.id, key: 'id' });
+    if (!mongoId) {
+      throw new BadRequestException('Invalid Diagram ID format');
+    }
+    const pipeline = [{ $match: { _id: mongoId } }, ...getDiagramLookup()];
     try {
       const [res] = await this.diagramRepository.aggregate(pipeline);
       return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, res);
@@ -213,16 +236,10 @@ export class DiagramService {
     }
   }
 
-  /**
-   * Update diagram
-   * @param payload
-   * @param updateDiagramDto
-   * @returns
-   */
   async update(payload, updateDiagramDto) {
     try {
       const validationError = await this.validateDiagramInput({
-        diagramName: updateDiagramDto.diagramName,
+        name: updateDiagramDto.name,
         slugs: updateDiagramDto.slugs,
         url: updateDiagramDto.url,
         shortCode: updateDiagramDto.shortCode,
@@ -250,11 +267,6 @@ export class DiagramService {
     }
   }
 
-  /**
-   * Remove diagram
-   * @param payload
-   * @returns
-   */
   async remove(payload) {
     try {
       const res = await this.diagramRepository.delete({ _id: payload.id });
@@ -268,12 +280,6 @@ export class DiagramService {
     }
   }
 
-  /**
-   * Import slugs in diagram
-   * @param payload
-   * @param fileData
-   * @returns
-   */
   async importSlugs(payload: IdDto, fileData: ImportSlugsDto[]) {
     try {
       if (!fileData || !fileData.length) {

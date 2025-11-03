@@ -7,13 +7,11 @@ export type diagramDocument = HydratedDocument<Diagram>;
 
 @Schema({ timestamps: true, versionKey: false, collection: 'diagrams' })
 export class Diagram extends AbstractSchema {
-  @Prop({ type: String, required: true })
-  override _id!: string;
 
   @Prop({ required: true, type: String, unique: true, trim: true })
-  diagramName!: string;
+  name!: string;
 
-  @Prop({ required: true, type: String, unique: true, trim: true })
+  @Prop({ required: false, type: String, unique: true, trim: true })
   url!: string;
 
   @Prop({
@@ -27,13 +25,11 @@ export class Diagram extends AbstractSchema {
   })
   slugs!: string[];
 
-  @Prop({ type: String })
-  logoImage?: string;
 
   @Prop({ type: String, enum: DIAGRAM_STATUS, default: DIAGRAM_STATUS.ACTIVE })
   status!: string;
 
-  @Prop({ type: String, required: true, unique: true })
+  @Prop({ type: String, required: false, unique: true })
   shortCode!: string;
 
   @Prop({ type: String, required: true })

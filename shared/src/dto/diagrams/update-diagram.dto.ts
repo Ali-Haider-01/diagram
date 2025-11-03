@@ -10,7 +10,7 @@ export class UpdateDiagramDto extends PartialType(CreateDiagramDto) {
     example: 'Diagram Title',
     required: false,
   })
-  override diagramName!: string;
+  override name!: string;
 
   @ApiProperty({
     type: String,
@@ -50,15 +50,6 @@ export class UpdateDiagramDto extends PartialType(CreateDiagramDto) {
     required: false,
   })
   override shortCode!: string;
-
-  @IsString()
-  @ApiProperty({
-    type: String,
-    example: 'https://example.com/image.png',
-    description: 'Optional image URL or path for logoImage',
-    required: false,
-  })
-  override logoImage?: string;
 }
 
 export class UpdateDiagramRequestResponse {
@@ -67,13 +58,12 @@ export class UpdateDiagramRequestResponse {
   message!: string;
   @ApiProperty({
     example: {
-      _id: '7978b940-da9c-4d5d-8b96-d66ed1ce2529',
-      diagramName: 'Updated Diagram Title',
+      _id: '690872ecc1c9e63aa21019d9',
+      name: 'Updated Diagram Title',
       url: 'https://example.com/updated-diagram',
       status: 'ACTIVE',
       slugs: ['updated-diagram-title', 'updated-diagram-title2'],
-      logoImage: 'https://example.com/updated-image.png',
-      createdBy: 'fe96e7cd-9d0f-4868-87a1-1532af1a14f3',
+      createdBy: '690872ecc1c9e63aa21019d9',
       createdAt: '2025-07-04T06:48:45.877Z',
       updatedAt: '2025-07-04T06:48:45.877Z',
     },

@@ -1,2 +1,2 @@
-export * from './user/user.dto';
+export * from './user/index';
 export * from './diagrams/index';

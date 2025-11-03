@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { DiagramService } from './diagram.service';
+import { DiagramService } from '../services/diagram.service';
 import {
   CreateDiagramDto,
   GetDiagramDto,
@@ -24,11 +24,11 @@ export class DiagramController {
 
  @MessagePattern(CREATE_DIAGRAM)
   createDiagram(
-    @Payload() payload: { createDiagramDto: CreateDiagramDto; chatUser: any }
+    @Payload() payload: { createDiagramDto: CreateDiagramDto; activeUser: any }
   ) {
     return this.diagramsService.create({
       createDiagramDto: payload.createDiagramDto,
-      chatUser: payload.chatUser,
+      activeUser: payload.activeUser,
     });
   }
 

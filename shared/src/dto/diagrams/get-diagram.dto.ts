@@ -29,11 +29,11 @@ export class GetDiagramDto extends PaginationDto {
   @ApiProperty({
     required: false,
     type: String,
-    example: '8285d600-9048-403d-b3c2-8b327995ddb2',
+    example: '690872ecc1c9e63aa21019d9',
   })
   userId?: string;
 
-  @IsOptional()
+  @IsOptional() 
   @IsBoolean()
   @Type(() => String)
   @Transform(({ value }) => {
@@ -57,16 +57,15 @@ export class GetDiagramRequestResponse {
     example: [
       {
         _id: 'fe96e7cd-9d0f-4868-87a1-1532af1a14f3',
-        diagramName: 'Diagram Title',
+        name: 'Diagram Title',
         url: 'https://example.com/diagram',
         shortCode: 'SMD',
         status: 'ACTIVE',
         slugs: ['diagram-title', 'diagram-title2'],
         logoImage: 'https://example.com/image.png',
         createdBy: {
-          _id: '7978b940-da9c-4d5d-8b96-d66ed1ce2529',
-          firstName: 'John',
-          lastName: 'Doe',
+          _id: '690872ecc1c9e63aa21019d9',
+          name: 'John',
           email: 'john.doe@example.com',
         },
         createdAt: '2025-07-04T06:48:45.877Z',
@@ -85,17 +84,16 @@ export class GetDiagramByIdRequestResponse {
   message!: string;
   @ApiProperty({
     example: {
-      _id: 'fe96e7cd-9d0f-4868-87a1-1532af1a14f3',
-      diagramName: 'Diagram Title',
+      _id: '690872ecc1c9e63aa21019d9',
+      name: 'Diagram Title',
       url: 'https://example.com/diagram',
       shortCode: 'SMD',
       status: 'ACTIVE',
       slugs: ['diagram-title', 'diagram-title2'],
       logoImage: 'https://example.com/image.png',
       createdBy: {
-        _id: '7978b940-da9c-4d5d-8b96-d66ed1ce2529',
-        firstName: 'John',
-        lastName: 'Doe',
+        _id: '690872ecc1c9e63aa21019d9',
+        name: 'John',
         email: 'john.doe@example.com',
       },
       createdAt: '2025-07-04T06:48:45.877Z',
