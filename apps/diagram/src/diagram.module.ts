@@ -8,10 +8,6 @@ import { DiagramController } from './app/controller/diagram.controller';
 import { DiagramService } from './app/services/diagram.service';
 
 const schemaObject = {
-  // RMQ Configuration
-  RMQ_URI: Joi.string().required(),
-  [`RMQ_${SERVICES.DIAGRAM}_QUEUE`]: Joi.string().required(),
-
   // Mongo DB Configuration
   MONGO_URI: Joi.string().required(),
   MONGO_DATABASE: Joi.string().required(),

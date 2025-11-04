@@ -17,5 +17,11 @@ export const MESSAGE_PATTERNS = {
     DELETE_DIAGRAM: 'delete_diagram',
     IMPORT_SLUGS_DIAGRAM: 'import_slugs_diagram',
   },
+  ACTIVITY_LOG: {
+    CREATE_ACTIVITY_LOG: 'activity_log',
+    MULTIPLE_ACTIVITY_LOG: 'multiple_activity_log',
+    GET_ALL_ACTIVITIES: 'get_all_activities',
+    GET_SUB_ACTIVITIES: 'get_sub_activities',
+  },
   };
   

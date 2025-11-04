@@ -8,10 +8,6 @@ import { UserController } from './app/controller/user.controller';
 import { UserService } from './app/services/user.service';
 
 const schemaObject = {
-  // RMQ Configuration
-  RMQ_URI: Joi.string().required(),
-  [`RMQ_${SERVICES.USER}_QUEUE`]: Joi.string().required(),
-
   // Mongo DB Configuration
   MONGO_URI: Joi.string().required(),
   MONGO_DATABASE: Joi.string().required(),

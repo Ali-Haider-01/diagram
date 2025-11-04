@@ -10,10 +10,6 @@ import { DiagramController } from './common/controllers/diagram.controllers';
 
 
 const schemaObject = {
-  // RMQ Configuration
-  RMQ_URI: Joi.string().required(),
-  [`RMQ_${SERVICES.GATEWAY}_QUEUE`]: Joi.string().required(),
-
   // Mongo DB Configuration
   GATEWAY_PORT: Joi.number().default(8000),
         

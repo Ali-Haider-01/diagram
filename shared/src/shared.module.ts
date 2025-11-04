@@ -7,10 +7,12 @@ import Joi = require('joi');
 import { UserRepository } from './repository';
 
 const schemaObject = {
+  GATEWAY_PORT: Joi.number().default(8000),
+
   // Mongo DB Configuration
   MONGO_URI: Joi.string().required(),
   MONGO_DATABASE: Joi.string().required(),
-  
+
   // JWT Configuration
   JWT_KEY: Joi.string().required(),
 };
@@ -42,7 +44,6 @@ const schemaObject = {
         secret: config.get<string>('JWT_KEY'),
       }),
     }),
-    
   ],
   providers: [UserRepository],
   exports: [JwtModule, UserRepository],

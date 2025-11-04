@@ -30,7 +30,7 @@ export class User extends AbstractSchema {
   otpGenerateTime?: number;
 
   @Prop({ type: String, enum: DIAGRAM_STATUS, default: DIAGRAM_STATUS.ACTIVE })
-    status!: string;
+  status!: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
