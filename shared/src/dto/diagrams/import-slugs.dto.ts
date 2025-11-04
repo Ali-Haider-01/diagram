@@ -1,22 +1,47 @@
-import { Type } from 'class-transformer';
-import { IsArray, ValidateNested, IsString } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-
-class SlugItemDto {
-  @IsString()
-  @ApiProperty({ example: 'diagram-title' })
-  @IsArray()
-  slugs!: string[];
-}
 
 export class ImportSlugsDto {
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SlugItemDto)
+  @IsString({ each: true })
   @ApiProperty({
-    type: [SlugItemDto],
-    description: 'Array of slug objects',
-    example: [{ slugs: 'diagram-title' }, { slugs: 'diagram-title-2' }],
+    type: [String],
+    description: 'Array of slugs to import',
+    example: ['diagram-title', 'diagram-title-2'],
   })
-  parsedData!: SlugItemDto[];
+  slugs!: string[];
+}
+
+export class ImportSlugsRequestResponse {
+  @ApiProperty({ example: 200 })
+  statusCode!: number;
+  message!: string;
+  @ApiProperty({
+    example: {
+      diagram: {
+        _id: '690872ecc1c9e63aa21019d9',
+        name: 'Diagram Title',
+        url: 'https://example.com/diagram',
+        slugs: ['diagram-title', 'diagram-title2'],
+        shortCode: 'SMD',
+        status: 'ACTIVE',
+        createdAt: '2025-07-04T06:48:45.877Z',
+        updatedAt: '2025-07-04T06:48:45.877Z',
+      },
+    },
+  })
+  data!: {
+    diagram: {
+      _id: string;
+      name: string;
+      url: string;
+      slugs: string[];
+      shortCode: string;
+      status: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+  };
+  @ApiProperty({ example: null })
+  errors!: [];
 }

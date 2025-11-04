@@ -1,0 +1,8 @@
+FROM node:20-alpine
+
+RUN mkdir -p /var/www/activity-log
+WORKDIR /var/www/activity-log
+ADD . /var/www/activity-log
+RUN npm install -f 
+RUN npx nx build activity-log
+CMD ["node", "./dist/apps/activity-log/main.js"]

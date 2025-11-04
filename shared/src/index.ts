@@ -5,4 +5,3 @@ export * from './schema';
 export * from './repository';
 export * from './utils';
 export * from './common/dto';
-export * from './interceptors';

@@ -4,6 +4,7 @@ import {
   CreateDiagramDto,
   GetDiagramDto,
   IdDto,
+  ImportSlugsDto,
   MESSAGE_PATTERNS,
   UpdateDiagramDto,
 } from '@diagram/shared';
@@ -55,7 +56,7 @@ export class DiagramController {
   }
 
   @MessagePattern(IMPORT_SLUGS_DIAGRAM)
-  importSlugsInDiagram(@Payload() data: { payload: IdDto; body: any }) {
+  importSlugsInDiagram(@Payload() data: { payload: IdDto; body: ImportSlugsDto }) {
     return this.diagramsService.importSlugs(data.payload, data.body);
   }
 }

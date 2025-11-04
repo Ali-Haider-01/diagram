@@ -14,7 +14,6 @@ services:
       - app-network
     depends_on:
       - rabbitmq
-
   user:
     container_name: user
     build:
@@ -27,12 +26,21 @@ services:
       - app-network
     depends_on:
       - rabbitmq
-
   diagram:
     container_name: diagram
     build:
       context: ./
       dockerfile: Dockerfile.diagram
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - app-network
+  activity-log:
+    container_name: activity-log
+    build:
+      context: ./
+      dockerfile: Dockerfile.activity-log
     restart: always
     env_file:
       - .env

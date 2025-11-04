@@ -19,18 +19,16 @@ import {
   GetDiagramByIdRequestResponse,
   GetDiagramDto,
   GetDiagramRequestResponse,
-  ImportFileInterceptor,
+  ImportSlugsDto,
+  ImportSlugsRequestResponse,
   UpdateDiagramDto,
   UpdateDiagramRequestResponse,
 } from '@diagram/shared';
 import {
-  ApiBody,
   ApiBearerAuth,
-  ApiConsumes,
   ApiCreatedResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { SERVICES, MESSAGE_PATTERNS, Auth } from '@diagram/shared';
 import { DeleteResponseDto, IdDto } from '@diagram/shared';
 
@@ -53,13 +51,6 @@ export class DiagramController {
     private diagramsServiceClient: ClientRMQ,
   ) {}
 
-  /**
-   * Create diagram
-   * @param createDiagramDto
-   * @param req
-   * @returns
-   */
-
   @Post()
   @ApiCreatedResponse({ type: CreateDiagramRequestResponse })
   async create(
@@ -76,11 +67,6 @@ export class DiagramController {
     return result;
   }
 
-  /**
-   * Get all diagrams
-   * @param getDiagramDto
-   * @returns
-   */
   @Get()
   @ApiCreatedResponse({ type: GetDiagramRequestResponse })
   async findAll(@Query() getDiagramDto: GetDiagramDto) {
@@ -89,11 +75,6 @@ export class DiagramController {
     );
   }
 
-  /**
-   * Get diagrams by id
-   * @param payload
-   * @returns
-   */
   @Get('/:id')
   @ApiCreatedResponse({ type: GetDiagramByIdRequestResponse })
   async findSingleDiagram(@Param() payload: IdDto) {
@@ -102,12 +83,6 @@ export class DiagramController {
     );
   }
 
-  /**
-   * Update diagram by id
-   * @param payload
-   * @param updateDiagramDto
-   * @returns
-   */
   @Patch('/:id')
   @ApiCreatedResponse({ type: UpdateDiagramRequestResponse })
   async updateDiagram(
@@ -124,11 +99,6 @@ export class DiagramController {
     return result;
   }
 
-  /**
-   * Delete diagram by id
-   * @param payload
-   * @returns
-   */
   @Delete('/:id')
   @ApiCreatedResponse({ type: DeleteResponseDto })
   async deleteDiagram(@Param() payload: IdDto) {
@@ -140,31 +110,13 @@ export class DiagramController {
     return result;
   }
 
-  /**
-   * Import slugs in diagram
-   * @param payload
-   * @param body
-   * @returns
-   */
   @Patch('/import-slugs/:id')
-  @UseInterceptors(FileInterceptor('file'), ImportFileInterceptor)
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  async importSlugsInDiagram(@Param() payload: IdDto, @Body() body) {
+  @ApiCreatedResponse({ type: ImportSlugsRequestResponse })
+  async importSlugsInDiagram(@Param() payload: IdDto, @Body() body: ImportSlugsDto) {
     return await lastValueFrom(
       this.diagramsServiceClient.send(IMPORT_SLUGS_DIAGRAM, {
         payload,
-        body: body.parsedData,
+        body,
       })
     );
   }

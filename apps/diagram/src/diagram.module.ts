@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { Diagram, DiagramRepository, DiagramSchema, SERVICES } from '@diagram/shared';
+import { Diagram, DiagramRepository, DiagramSchema } from '@diagram/shared';
 import Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';

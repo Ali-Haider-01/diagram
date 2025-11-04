@@ -2,5 +2,5 @@ export const SERVICES = {
     GATEWAY: 'GATEWAY',
     DIAGRAM: 'DIAGRAM',
     USER: 'USER',
+    ACTIVITY_LOG: 'ACTIVITY_LOG',
 };
-

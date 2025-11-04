@@ -280,23 +280,19 @@ export class DiagramService {
     }
   }
 
-  async importSlugs(payload: IdDto, fileData: ImportSlugsDto[]) {
+  async importSlugs(payload: IdDto, slugsData: ImportSlugsDto) {
     try {
-      if (!fileData || !fileData.length) {
+      if (!slugsData || !slugsData.slugs || !slugsData.slugs.length) {
         return errorResponse(
           HttpStatus.BAD_REQUEST,
           ResponseMessage.BAD_REQUEST,
-          'No data to import'
+          'No slugs to import'
         );
       }
-      const slugs = fileData.map((item: any) => item.slugs).filter(Boolean);
-      if (slugs.length === 0) {
-        return errorResponse(
-          HttpStatus.BAD_REQUEST,
-          ResponseMessage.BAD_REQUEST,
-          'No valid slugs found'
-        );
-      }
+
+      const slugs = slugsData.slugs;
+      
+      // Validate that slugs are unique
       if (new Set(slugs).size !== slugs.length) {
         return errorResponse(
           HttpStatus.BAD_REQUEST,
@@ -304,18 +300,30 @@ export class DiagramService {
         );
       }
 
-      const diagram = await this.diagramRepository.findOneAndUpdate(
+      // Get the existing diagram to merge with existing slugs or replace
+      const existingDiagram = await this.diagramRepository.findOne(
         { _id: payload.id },
-        { slugs }
+        undefined,
+        { notFoundThrowError: false }
       );
 
-      if (!diagram) {
+      if (!existingDiagram) {
         return errorResponse(
           HttpStatus.NOT_FOUND,
           ResponseMessage.NOT_FOUND,
           'Diagram not found'
         );
       }
+
+      // Merge existing slugs with new slugs, ensuring uniqueness
+      const existingSlugs = existingDiagram.slugs || [];
+      const allSlugs = [...new Set([...existingSlugs, ...slugs])];
+
+      // Update the diagram with the merged slugs array
+      const diagram = await this.diagramRepository.findOneAndUpdate(
+        { _id: payload.id },
+        { slugs: allSlugs }
+      );
 
       return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, {
         diagram,

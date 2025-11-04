@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { JwtModule } from '@nestjs/jwt';
+import { ActivityLogController } from './app/controller/activity-log.controller';
+import { ActivityLogService } from './app/services/activity-log.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User, UserSchema } from './schema';
-import Joi = require('joi');
-import { UserRepository } from './repository';
+import Joi from 'joi';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ActivityLog, ActivityLogRepository, ActivityLogSchema } from '@diagram/shared';
+import { JwtModule } from '@nestjs/jwt';
 
 const schemaObject = {
-  GATEWAY_PORT: Joi.number().default(8000),
-
   // Mongo DB Configuration
   MONGO_URI: Joi.string().required(),
   MONGO_DATABASE: Joi.string().required(),
@@ -33,8 +32,8 @@ const schemaObject = {
     }),
     MongooseModule.forFeature([
       {
-        name: User.name,
-        schema: UserSchema,
+        name: ActivityLog.name,
+        schema: ActivityLogSchema,
       },
     ]),
     JwtModule.registerAsync({
@@ -45,7 +44,7 @@ const schemaObject = {
       }),
     }),
   ],
-  providers: [UserRepository],
-  exports: [JwtModule, UserRepository],
+  controllers: [ActivityLogController],
+  providers: [ActivityLogService, ActivityLogRepository],
 })
-export class SharedModule {}
+export class ActivityLogModule {}
