@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { AbstractSchema } from '../common/abstract';
-import { DIAGRAM_STATUS } from '../constant';
+import { STATUS } from '../constant';
 
 export type diagramDocument = HydratedDocument<Diagram>;
 
@@ -26,7 +26,7 @@ export class Diagram extends AbstractSchema {
   slugs!: string[];
 
 
-  @Prop({ type: String, enum: DIAGRAM_STATUS, default: DIAGRAM_STATUS.ACTIVE })
+  @Prop({ type: String, enum: STATUS, default: STATUS.ACTIVE })
   status!: string;
 
   @Prop({ type: String, required: false, unique: true })

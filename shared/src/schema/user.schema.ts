@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AbstractSchema } from '../common/abstract';
-import { DIAGRAM_STATUS } from '../constant';
+import { STATUS } from '../constant';
 
 @Schema({ versionKey: false })
 export class User extends AbstractSchema {
@@ -29,7 +29,7 @@ export class User extends AbstractSchema {
   @Prop({ required: false, type: Number })
   otpGenerateTime?: number;
 
-  @Prop({ type: String, enum: DIAGRAM_STATUS, default: DIAGRAM_STATUS.ACTIVE })
+  @Prop({ type: String, enum: STATUS, default: STATUS.ACTIVE })
   status!: string;
 }
 
