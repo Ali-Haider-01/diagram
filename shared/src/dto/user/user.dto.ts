@@ -2,6 +2,7 @@ import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsISO8601, IsNumber, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../../common/dto';
 import { Transform, Type } from 'class-transformer';
+import { STATUS } from 'shared/src/constant';
 
 export class UserDto {
   @IsString()
@@ -30,7 +31,8 @@ export class UserDto {
   address!: string;
   @IsString()
   @ApiProperty({
-    example: 'ACTIVE',
+    example: STATUS.ACTIVE,
+    enum: STATUS,
     type: String,
   })
   status!: string;
@@ -113,63 +115,6 @@ export class ChangePasswordDto {
   })
   confirmPassword!: string;
 }
-
-export class UpdateUserDto extends PartialType(UserDto) {
-  @IsOptional()
-  @IsString()
-  @ApiProperty({
-    example: 'name',
-    type: String,
-    required: false,
-  })
-  override name?: string;
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty({
-    example: '+923123456789',
-    type: String,
-    required: false,
-  })
-  override phoneNumber?: string;
-
-  @IsOptional()
-  @IsEmail()
-  @ApiProperty({
-    example: 'email@gmail.com',
-    type: String,
-    required: false,
-  })
-  override email?: string;
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty({
-    example: 'address',
-    type: String,
-    required: false,
-  })
-  override address?: string;
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty({
-    example: 'ACTIVE',
-    type: String,
-    required: false,
-  })
-  override status?: string;
-
-  @IsOptional()
-  @IsNumber()
-  @ApiProperty({
-    example: 25,
-    type: Number,
-    required: false,
-  })
-  override age?: Number;
-}
-
 export class GetUserDto extends PaginationDto {
   @IsOptional()
   @IsISO8601()

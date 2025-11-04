@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { DIAGRAM_STATUS } from 'shared/src/constant';
+import { STATUS } from 'shared/src/constant';
 
 export class CreateDiagramDto {
   @IsNotEmpty()
@@ -23,7 +23,8 @@ export class CreateDiagramDto {
   @IsNotEmpty()
   @ApiProperty({
     type: String,
-    enum: DIAGRAM_STATUS,
+    enum: STATUS,
+    example: STATUS.ACTIVE,
     required: true,
   })
   status!: string;

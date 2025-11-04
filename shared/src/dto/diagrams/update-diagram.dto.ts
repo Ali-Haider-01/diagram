@@ -2,7 +2,7 @@ import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateDiagramDto } from './create-diagram.dto';
 import { IsArray, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { DIAGRAM_STATUS } from 'shared/src/constant';
+import { STATUS } from 'shared/src/constant';
 
 export class UpdateDiagramDto extends PartialType(CreateDiagramDto) {
   @ApiProperty({
@@ -21,7 +21,8 @@ export class UpdateDiagramDto extends PartialType(CreateDiagramDto) {
 
   @ApiProperty({
     type: String,
-    enum: DIAGRAM_STATUS,
+    enum: STATUS,
+    example: STATUS.ACTIVE,
     required: false,
   })
   override status!: string;
