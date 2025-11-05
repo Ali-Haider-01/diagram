@@ -23,6 +23,8 @@ function getActivityLogLookup() {
         queryParams: 1,
         responseTime: 1,
         errorMessage: 1,
+        createdAt: 1,
+        updatedAt: 1,
       },
     },
   ];

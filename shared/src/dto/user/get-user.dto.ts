@@ -1,9 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsEmail,
+  IsISO8601,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { PaginationDto } from '../../common/dto';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsISO8601, IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from 'shared/src/common/dto';
 
-export class GetDiagramDto extends PaginationDto {
+export class GetUserDto extends PaginationDto {
   @IsOptional()
   @IsISO8601()
   @ApiProperty({
@@ -25,15 +31,24 @@ export class GetDiagramDto extends PaginationDto {
   endDate!: string;
 
   @IsOptional()
+  @IsEmail()
+  @ApiProperty({
+    required: false,
+    type: String,
+    example: 'email@gmail.com',
+  })
+  email?: string;
+
+  @IsOptional()
   @IsString()
   @ApiProperty({
     required: false,
     type: String,
-    example: '690872ecc1c9e63aa21019d9',
+    example: 'ACTIVE',
   })
-  userId?: string;
+  status?: string;
 
-  @IsOptional() 
+  @IsOptional()
   @IsBoolean()
   @Type(() => String)
   @Transform(({ value }) => {
@@ -49,7 +64,7 @@ export class GetDiagramDto extends PaginationDto {
   meta?: boolean;
 }
 
-export class GetDiagramRequestResponse {
+export class GetUserRequestResponse {
   @ApiProperty({ example: 200 })
   statusCode!: number;
   message!: string;
@@ -57,50 +72,68 @@ export class GetDiagramRequestResponse {
     example: [
       {
         _id: '690872ecc1c9e63aa21019d9',
-        name: 'Diagram Title',
-        url: 'https://example.com/diagram',
-        shortCode: 'SMD',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        phoneNumber: '+923123456789',
+        address: '123 Main St, Anytown, USA',
         status: 'ACTIVE',
-        slugs: ['diagram-title', 'diagram-title2'],
-        logoImage: 'https://example.com/image.png',
-        createdBy: {
-          _id: '690872ecc1c9e63aa21019d9',
-          name: 'John',
-          email: 'john.doe@example.com',
-        },
+        age: 30,
         createdAt: '2025-07-04T06:48:45.877Z',
         updatedAt: '2025-07-04T06:48:45.877Z',
       },
     ],
   })
-  data!: {};
+  data!: {
+    _id: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    status: string;
+    age: number;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+  @ApiProperty({ required: false, example: null })
+  pagination?: {
+    page: number;
+    limit: number;
+    totalPages: number;
+    resultCount: number;
+    totalResult: number;
+  };
   @ApiProperty({ example: null })
-  errors!: [];
+  error!: null;
 }
 
-export class GetDiagramByIdRequestResponse {
+export class GetUserProfileRequestResponse {
   @ApiProperty({ example: 200 })
   statusCode!: number;
   message!: string;
   @ApiProperty({
     example: {
       _id: '690872ecc1c9e63aa21019d9',
-      name: 'Diagram Title',
-      url: 'https://example.com/diagram',
-      shortCode: 'SMD',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phoneNumber: '+923123456789',
+      address: '123 Main St, Anytown, USA',
       status: 'ACTIVE',
-      slugs: ['diagram-title', 'diagram-title2'],
-      logoImage: 'https://example.com/image.png',
-      createdBy: {
-        _id: '690872ecc1c9e63aa21019d9',
-        name: 'John',
-        email: 'john.doe@example.com',
-      },
+      age: 30,
       createdAt: '2025-07-04T06:48:45.877Z',
       updatedAt: '2025-07-04T06:48:45.877Z',
     },
   })
-  data!: {};
+  data!: {
+    _id: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    status: string;
+    age: number;
+    createdAt: string;
+    updatedAt: string;
+  };
   @ApiProperty({ example: null })
-  errors!: [];
+  error!: null;
 }

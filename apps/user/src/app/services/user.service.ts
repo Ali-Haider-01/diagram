@@ -36,6 +36,8 @@ function getUserLookup() {
         address: 1,
         phoneNumber: 1,
         status: 1,
+        createdAt: 1,
+        updatedAt: 1,
       },
     },
   ];

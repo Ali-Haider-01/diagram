@@ -6,10 +6,11 @@ import {
 } from '@nestjs/common';
 import {
   ActivityLogDto,
+  GetActivityLogByIdRequestResponse,
   MESSAGE_PATTERNS,
   SERVICES,
 } from '@diagram/shared';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { ClientRMQ } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -23,6 +24,7 @@ export class ActivityLogController {
   ) {}
 
   @Get('/get-all-activity-log')
+  @ApiCreatedResponse({ type: GetActivityLogByIdRequestResponse })
   async getAllActivityLog(@Query() activityLogDto: ActivityLogDto) {
     try {
       return await firstValueFrom(

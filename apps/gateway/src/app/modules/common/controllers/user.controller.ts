@@ -11,15 +11,23 @@ import {
 import {
   Auth,
   ChangePasswordDto,
+  ChangePasswordRequestResponse,
+  CreateUserRequestResponse,
   EmailDto,
   ForgotPasswordDto,
+  ForgotPasswordRequestResponse,
+  GenerateOTPRequestResponse,
   GetUserDto,
+  GetUserProfileRequestResponse,
+  GetUserRequestResponse,
   LogInDto,
+  LogOutRequestResponse,
+  LoginUserRequestResponse,
   MESSAGE_PATTERNS,
   SERVICES,
   UserDto,
 } from '@diagram/shared';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { ClientRMQ } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -40,6 +48,7 @@ export class UserController {
   constructor(@Inject(SERVICES.USER) private readonly userClient: ClientRMQ) {}
 
   @Post('/sign-up')
+  @ApiCreatedResponse({ type: CreateUserRequestResponse })
   async signUp(@Body() userDto: UserDto) {
     try {
       return await firstValueFrom(this.userClient.send(SIGN_UP, userDto));
@@ -50,6 +59,7 @@ export class UserController {
   }
 
   @Post('/log-in')
+  @ApiCreatedResponse({ type: LoginUserRequestResponse })
   async logIn(@Body() loginDto: LogInDto) {
     try {
       return await firstValueFrom(this.userClient.send(LOG_IN, loginDto));
@@ -60,6 +70,7 @@ export class UserController {
   }
 
   @Post('/generate-otp')
+  @ApiCreatedResponse({ type: GenerateOTPRequestResponse })
   async generateOTP(@Body() emailDto: EmailDto) {
     try {
       return await firstValueFrom(this.userClient.send(GENERATE_OTP, emailDto));
@@ -70,6 +81,7 @@ export class UserController {
   }
 
   @Post('/forgot-password')
+  @ApiCreatedResponse({ type: ForgotPasswordRequestResponse })
   async forgotPassword(@Body() forgotPassword: ForgotPasswordDto) {
     try {
       return await firstValueFrom(
@@ -84,6 +96,7 @@ export class UserController {
   @ApiBearerAuth()
   @Auth()
   @Get('/get-profile')
+  @ApiCreatedResponse({ type: GetUserProfileRequestResponse })
   async getProfile(@Request() req) {
     try {
       return await firstValueFrom(this.userClient.send(GET_PROFILE, req.user));
@@ -96,6 +109,7 @@ export class UserController {
   @ApiBearerAuth()
   @Auth()
   @Get('/get-all-user')
+  @ApiCreatedResponse({ type: GetUserRequestResponse })
   async getAllUser(@Query() getUserDto: GetUserDto) {
     try {
       return await firstValueFrom(
@@ -110,6 +124,7 @@ export class UserController {
   @ApiBearerAuth()
   @Auth()
   @Patch('/change-password')
+  @ApiCreatedResponse({ type: ChangePasswordRequestResponse })
   async changePassword(
     @Request() req,
     @Body() changePasswordDto: ChangePasswordDto
@@ -130,6 +145,7 @@ export class UserController {
   @ApiBearerAuth()
   @Auth()
   @Patch('/logOut')
+  @ApiCreatedResponse({ type: LogOutRequestResponse })
   async logOut(@Request() req) {
     try {
       return await firstValueFrom(
