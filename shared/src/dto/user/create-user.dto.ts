@@ -76,6 +76,6 @@ export class CreateUserRequestResponse {
     createdAt: string;
     updatedAt: string;
   };
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }

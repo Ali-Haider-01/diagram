@@ -51,7 +51,7 @@ export class ForgotPasswordRequestResponse {
     example: 'New password generated successfully',
   })
   data!: string;
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }
 
@@ -63,7 +63,7 @@ export class ChangePasswordRequestResponse {
     example: 'Password updated successfully',
   })
   data!: string;
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }
 
@@ -75,6 +75,6 @@ export class LogOutRequestResponse {
     example: 'Logged out successfully',
   })
   data!: string;
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }

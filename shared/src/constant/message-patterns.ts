@@ -19,5 +19,7 @@ export const MESSAGE_PATTERNS = {
   },
   ACTIVITY_LOG: {
     GET_ALL_ACTIVITIES: 'get_all_activities',
+    GET_MOST_VISITED_API: 'get_most_visited_api',
+    GET_MOST_VISITED_USER: 'get_most_visited_user',
   },
 };

@@ -42,6 +42,6 @@ export class ImportSlugsRequestResponse {
       updatedAt: string;
     };
   };
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Array, nullable: true })
   errors!: [];
 }

@@ -70,6 +70,6 @@ export class UpdateDiagramRequestResponse {
     },
   })
   data: any;
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Array, nullable: true })
   errors!: [];
 }

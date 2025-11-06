@@ -1,10 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { ActivityLogService } from '../services/activity-log.service';
-import { ActivityLogDto } from '@diagram/shared';
+import { ActivityLogDto, GetMostVisitedApiDto, GetMostVisitedUserDto } from '@diagram/shared';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { MESSAGE_PATTERNS } from '@diagram/shared';
 
-const { GET_ALL_ACTIVITIES } = MESSAGE_PATTERNS.ACTIVITY_LOG;
+const { GET_ALL_ACTIVITIES, GET_MOST_VISITED_API, GET_MOST_VISITED_USER } = MESSAGE_PATTERNS.ACTIVITY_LOG;
 
 @Controller()
 export class ActivityLogController {
@@ -13,5 +13,15 @@ export class ActivityLogController {
   @MessagePattern(GET_ALL_ACTIVITIES)
   async getAllActivityLog(@Payload() activityLogDto: ActivityLogDto) {
     return this.activityLogService.getAllActivityLog(activityLogDto);
+  }
+
+  @MessagePattern(GET_MOST_VISITED_API)
+  async getMostVisitedApi(@Payload() dto: GetMostVisitedApiDto) {
+    return this.activityLogService.getMostVisitedApi(dto);
+  }
+
+  @MessagePattern(GET_MOST_VISITED_USER)
+  async getMostVisitedUser(@Payload() dto: GetMostVisitedUserDto) {
+    return this.activityLogService.getMostVisitedUser(dto);
   }
 }

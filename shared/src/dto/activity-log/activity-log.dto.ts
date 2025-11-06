@@ -109,3 +109,69 @@ export class GetActivityLogByIdRequestResponse {
   @ApiProperty({ example: null })
   errors!: [];
 }
+
+export class GetMostVisitedApiDto {
+  @IsOptional()
+  @IsISO8601()
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '2025-07-04',
+  })
+  startDate?: string;
+
+  @IsOptional()
+  @IsISO8601()
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '2025-07-04',
+  })
+  endDate?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({
+    required: false,
+    type: Number,
+    example: 10,
+    description: 'Limit the number of results returned',
+  })
+  limit?: number;
+}
+
+export class GetMostVisitedUserDto {
+  @IsOptional()
+  @IsISO8601()
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '2025-07-04',
+  })
+  startDate?: string;
+
+  @IsOptional()
+  @IsISO8601()
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '2025-07-04',
+  })
+  endDate?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiProperty({
+    required: false,
+    type: Number,
+    example: 10,
+    description: 'Limit the number of results returned',
+  })
+  limit?: number;
+}

@@ -74,7 +74,7 @@ export class GetDiagramRequestResponse {
     ],
   })
   data!: {};
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Array, nullable: true })
   errors!: [];
 }
 
@@ -101,6 +101,6 @@ export class GetDiagramByIdRequestResponse {
     },
   })
   data!: {};
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Array, nullable: true })
   errors!: [];
 }

@@ -7,6 +7,8 @@ import {
 import {
   ActivityLogDto,
   GetActivityLogByIdRequestResponse,
+  GetMostVisitedApiDto,
+  GetMostVisitedUserDto,
   MESSAGE_PATTERNS,
   SERVICES,
 } from '@diagram/shared';
@@ -14,7 +16,7 @@ import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { ClientRMQ } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
-const { GET_ALL_ACTIVITIES } = MESSAGE_PATTERNS.ACTIVITY_LOG;
+const { GET_ALL_ACTIVITIES,GET_MOST_VISITED_API,GET_MOST_VISITED_USER } = MESSAGE_PATTERNS.ACTIVITY_LOG;
 
 @ApiTags('activity-log')
 @Controller()
@@ -32,6 +34,29 @@ export class ActivityLogController {
       );
     } catch (error) {
       console.error('Gateway getAllActivityLog error:', error);
+      throw error;
+    }
+  }
+  @Get('/get-most-visited-api')
+ 
+  async getMostVisitedApi(@Query() dto: GetMostVisitedApiDto) {
+    try {
+      return await firstValueFrom(
+        this.activityLogClient.send(GET_MOST_VISITED_API, dto)
+      );
+    } catch (error) {
+      console.error('Gateway getMostVisitedApi error:', error);
+      throw error;
+    }
+  }
+  @Get('/get-most-visited-user')
+  async getMostVisitedUser(@Query() dto: GetMostVisitedUserDto) {
+    try {
+      return await firstValueFrom(
+        this.activityLogClient.send(GET_MOST_VISITED_USER, dto)
+      );
+    } catch (error) {
+      console.error('Gateway getMostVisitedUser error:', error);
       throw error;
     }
   }

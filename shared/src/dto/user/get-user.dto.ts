@@ -102,7 +102,7 @@ export class GetUserRequestResponse {
     resultCount: number;
     totalResult: number;
   };
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }
 
@@ -134,6 +134,6 @@ export class GetUserProfileRequestResponse {
     createdAt: string;
     updatedAt: string;
   };
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }

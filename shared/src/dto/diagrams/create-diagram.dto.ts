@@ -71,6 +71,6 @@ export class CreateDiagramRequestResponse {
     },
   })
   data!: {};
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Array, nullable: true })
   errors!: [];
 }

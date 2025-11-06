@@ -32,7 +32,7 @@ export class GenerateOTPRequestResponse {
     example: 'OTP Generated',
   })
   data!: string;
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }
 
@@ -50,6 +50,6 @@ export class LoginUserRequestResponse {
     access_token: string;
     refresh_token: string;
   };
-  @ApiProperty({ example: null })
+  @ApiProperty({ example: null, type: () => Object, nullable: true })
   error!: null;
 }
