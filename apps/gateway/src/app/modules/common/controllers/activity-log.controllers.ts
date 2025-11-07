@@ -38,11 +38,10 @@ export class ActivityLogController {
     }
   }
   @Get('/get-most-visited-api')
- 
-  async getMostVisitedApi(@Query() dto: GetMostVisitedApiDto) {
+  async getMostVisitedApi() {
     try {
       return await firstValueFrom(
-        this.activityLogClient.send(GET_MOST_VISITED_API, dto)
+        this.activityLogClient.send(GET_MOST_VISITED_API, {})
       );
     } catch (error) {
       console.error('Gateway getMostVisitedApi error:', error);
@@ -50,10 +49,10 @@ export class ActivityLogController {
     }
   }
   @Get('/get-most-visited-user')
-  async getMostVisitedUser(@Query() dto: GetMostVisitedUserDto) {
+  async getMostVisitedUser() {
     try {
       return await firstValueFrom(
-        this.activityLogClient.send(GET_MOST_VISITED_USER, dto)
+        this.activityLogClient.send(GET_MOST_VISITED_USER, {})
       );
     } catch (error) {
       console.error('Gateway getMostVisitedUser error:', error);

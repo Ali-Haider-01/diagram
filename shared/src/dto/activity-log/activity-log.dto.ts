@@ -141,6 +141,21 @@ export class GetMostVisitedApiDto {
     description: 'Limit the number of results returned',
   })
   limit?: number;
+
+  @IsOptional() 
+  @IsBoolean()
+  @Type(() => String)
+  @Transform(({ value }) => {
+    if (value === 'true') {
+      return true;
+    }
+    if (value === 'false') {
+      return false;
+    }
+    return undefined;
+  })
+  @ApiProperty({ required: false, type: Boolean, default: true })
+  meta?: boolean;
 }
 
 export class GetMostVisitedUserDto {
@@ -174,4 +189,19 @@ export class GetMostVisitedUserDto {
     description: 'Limit the number of results returned',
   })
   limit?: number;
+
+  @IsOptional() 
+  @IsBoolean()
+  @Type(() => String)
+  @Transform(({ value }) => {
+    if (value === 'true') {
+      return true;
+    }
+    if (value === 'false') {
+      return false;
+    }
+    return undefined;
+  })
+  @ApiProperty({ required: false, type: Boolean, default: true })
+  meta?: boolean;
 }

@@ -90,25 +90,9 @@ export class ActivityLogService {
     }
   }
 
-  async getMostVisitedApi(dto: GetMostVisitedApiDto): Promise<any> {
-    const { startDate, endDate, limit = 10 } = dto;
-    
+  async getMostVisitedApi(): Promise<any> {
     try {
-      const filterQuery: any = {};
-      
-      // Apply date range filter if provided
-      const createdAtRange = buildDateRangeFilter(
-        startDate ? new Date(startDate) : undefined,
-        endDate ? new Date(endDate) : undefined
-      );
-      if (createdAtRange) {
-        filterQuery['createdAt'] = createdAtRange;
-      }
-
       const pipeline: any[] = [
-        // Match documents based on filter
-        { $match: filterQuery },
-        // Group by URL and method, count occurrences
         {
           $group: {
             _id: {
@@ -116,15 +100,10 @@ export class ActivityLogService {
               method: '$method',
             },
             count: { $sum: 1 },
-            // Get additional info from the first occurrence
             statusCode: { $first: '$statusCode' },
           },
         },
-        // Sort by count descending
         { $sort: { count: -1 } },
-        // Limit results
-        { $limit: limit },
-        // Reshape the output
         {
           $project: {
             _id: 0,
@@ -136,7 +115,9 @@ export class ActivityLogService {
         },
       ];
 
-      const results = await this.activityLogRepository.aggregate(pipeline);
+      const results = await this.activityLogRepository.paginate({
+        pipelines: pipeline,
+      });
       
       return successResponse(
         HttpStatus.OK,
@@ -152,31 +133,10 @@ export class ActivityLogService {
     }
   }
 
-  async getMostVisitedUser(dto: GetMostVisitedUserDto): Promise<any> {
-    const { startDate, endDate, limit = 10 } = dto;
-    
+  async getMostVisitedUser(): Promise<any> {
     try {
-      const filterQuery: any = {};
-      
-      // Apply date range filter if provided
-      const createdAtRange = buildDateRangeFilter(
-        startDate ? new Date(startDate) : undefined,
-        endDate ? new Date(endDate) : undefined
-      );
-      if (createdAtRange) {
-        filterQuery['createdAt'] = createdAtRange;
-      }
-
-      // Only include documents with userId or userEmail
-      filterQuery['$or'] = [
-        { userId: { $exists: true, $ne: null } },
-        { userEmail: { $exists: true, $ne: null } },
-      ];
-
       const pipeline: any[] = [
-        // Match documents based on filter
-        { $match: filterQuery },
-        // Add a computed field to identify user (prefer userId, fallback to userEmail)
+        // Add a computed field to identify user (prefer userId, fallback to userEmail
         {
           $addFields: {
             userIdentifier: {
@@ -201,8 +161,6 @@ export class ActivityLogService {
         },
         // Sort by count descending
         { $sort: { count: -1 } },
-        // Limit results
-        { $limit: limit },
         // Reshape the output
         {
           $project: {
@@ -215,7 +173,9 @@ export class ActivityLogService {
         },
       ];
 
-      const results = await this.activityLogRepository.aggregate(pipeline);
+      const results = await this.activityLogRepository.paginate({
+        pipelines: pipeline,
+      });
       
       return successResponse(
         HttpStatus.OK,

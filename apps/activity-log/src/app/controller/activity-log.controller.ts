@@ -16,12 +16,12 @@ export class ActivityLogController {
   }
 
   @MessagePattern(GET_MOST_VISITED_API)
-  async getMostVisitedApi(@Payload() dto: GetMostVisitedApiDto) {
-    return this.activityLogService.getMostVisitedApi(dto);
+  async getMostVisitedApi() {
+    return this.activityLogService.getMostVisitedApi();
   }
 
   @MessagePattern(GET_MOST_VISITED_USER)
-  async getMostVisitedUser(@Payload() dto: GetMostVisitedUserDto) {
-    return this.activityLogService.getMostVisitedUser(dto);
+  async getMostVisitedUser() {
+    return this.activityLogService.getMostVisitedUser();
   }
 }
