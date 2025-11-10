@@ -6,9 +6,7 @@ import {
 } from '@nestjs/common';
 import {
   ActivityLogDto,
-  GetActivityLogByIdRequestResponse,
-  GetMostVisitedApiDto,
-  GetMostVisitedUserDto,
+  GetActivityLogRequestResponse,
   MESSAGE_PATTERNS,
   SERVICES,
 } from '@diagram/shared';
@@ -26,7 +24,7 @@ export class ActivityLogController {
   ) {}
 
   @Get('/get-all-activity-log')
-  @ApiCreatedResponse({ type: GetActivityLogByIdRequestResponse })
+  @ApiCreatedResponse({ type: GetActivityLogRequestResponse })
   async getAllActivityLog(@Query() activityLogDto: ActivityLogDto) {
     try {
       return await firstValueFrom(

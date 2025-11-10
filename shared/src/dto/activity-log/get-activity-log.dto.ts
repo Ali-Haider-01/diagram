@@ -68,7 +68,7 @@ export class ActivityLogDto extends PaginationDto {
 }
 
 
-export class GetActivityLogByIdRequestResponse {
+export class GetActivityLogRequestResponse {
   @ApiProperty({ example: 200 })
   statusCode!: number;
   message!: string;
@@ -108,100 +108,4 @@ export class GetActivityLogByIdRequestResponse {
   }[];
   @ApiProperty({ example: null })
   errors!: [];
-}
-
-export class GetMostVisitedApiDto {
-  @IsOptional()
-  @IsISO8601()
-  @ApiProperty({
-    required: false,
-    type: String,
-    format: 'date',
-    example: '2025-07-04',
-  })
-  startDate?: string;
-
-  @IsOptional()
-  @IsISO8601()
-  @ApiProperty({
-    required: false,
-    type: String,
-    format: 'date',
-    example: '2025-07-04',
-  })
-  endDate?: string;
-
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({
-    required: false,
-    type: Number,
-    example: 10,
-    description: 'Limit the number of results returned',
-  })
-  limit?: number;
-
-  @IsOptional() 
-  @IsBoolean()
-  @Type(() => String)
-  @Transform(({ value }) => {
-    if (value === 'true') {
-      return true;
-    }
-    if (value === 'false') {
-      return false;
-    }
-    return undefined;
-  })
-  @ApiProperty({ required: false, type: Boolean, default: true })
-  meta?: boolean;
-}
-
-export class GetMostVisitedUserDto {
-  @IsOptional()
-  @IsISO8601()
-  @ApiProperty({
-    required: false,
-    type: String,
-    format: 'date',
-    example: '2025-07-04',
-  })
-  startDate?: string;
-
-  @IsOptional()
-  @IsISO8601()
-  @ApiProperty({
-    required: false,
-    type: String,
-    format: 'date',
-    example: '2025-07-04',
-  })
-  endDate?: string;
-
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({
-    required: false,
-    type: Number,
-    example: 10,
-    description: 'Limit the number of results returned',
-  })
-  limit?: number;
-
-  @IsOptional() 
-  @IsBoolean()
-  @Type(() => String)
-  @Transform(({ value }) => {
-    if (value === 'true') {
-      return true;
-    }
-    if (value === 'false') {
-      return false;
-    }
-    return undefined;
-  })
-  @ApiProperty({ required: false, type: Boolean, default: true })
-  meta?: boolean;
 }

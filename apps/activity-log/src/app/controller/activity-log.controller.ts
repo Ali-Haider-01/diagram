@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { ActivityLogService } from '../services/activity-log.service';
-import { ActivityLogDto, GetMostVisitedApiDto, GetMostVisitedUserDto } from '@diagram/shared';
+import { ActivityLogDto } from '@diagram/shared';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { MESSAGE_PATTERNS } from '@diagram/shared';
 

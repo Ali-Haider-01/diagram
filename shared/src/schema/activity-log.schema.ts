@@ -28,7 +28,7 @@ export class ActivityLog extends AbstractSchema {
   queryParams?: Record<string, any>;
 
   @Prop({ required: false })
-  responseTime?: number; // in milliseconds
+  responseTime?: number;
 
   @Prop({ required: false })
   errorMessage?: string;

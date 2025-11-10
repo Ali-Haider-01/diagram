@@ -5,8 +5,6 @@ import {
   errorResponse,
   ResponseMessage,
   successResponse,
-  GetMostVisitedApiDto,
-  GetMostVisitedUserDto,
 } from '@diagram/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 
@@ -35,6 +33,9 @@ function getActivityLogLookup() {
 @Injectable()
 export class ActivityLogService {
   constructor(private readonly activityLogRepository: ActivityLogRepository) {}
+
+  async createActivityLog(createActivityLogDto): Promise<any> {
+  };
 
   async getAllActivityLog(activityLogDto: ActivityLogDto): Promise<any> {
     const {
@@ -88,7 +89,7 @@ export class ActivityLogService {
         err.message
       );
     }
-  }
+  };
 
   async getMostVisitedApi(): Promise<any> {
     try {
@@ -131,7 +132,7 @@ export class ActivityLogService {
         err.message
       );
     }
-  }
+  };
 
   async getMostVisitedUser(): Promise<any> {
     try {
