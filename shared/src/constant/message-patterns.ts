@@ -18,6 +18,8 @@ export const MESSAGE_PATTERNS = {
     IMPORT_SLUGS_DIAGRAM: 'import_slugs_diagram',
   },
   ACTIVITY_LOG: {
+    ACTIVITY_LOGGED_EVENT:'activity_logged_event',
+    CREATE_ACTIVITY_LOG: 'create_activity_log',
     GET_ALL_ACTIVITIES: 'get_all_activities',
     GET_MOST_VISITED_API: 'get_most_visited_api',
     GET_MOST_VISITED_USER: 'get_most_visited_user',

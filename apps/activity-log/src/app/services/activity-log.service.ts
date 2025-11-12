@@ -34,8 +34,22 @@ function getActivityLogLookup() {
 export class ActivityLogService {
   constructor(private readonly activityLogRepository: ActivityLogRepository) {}
 
-  async createActivityLog(createActivityLogDto): Promise<any> {
-  };
+  async createActivityLog(createActivityLogDto: any): Promise<any> {
+    try {
+      const activityLog = await this.activityLogRepository.create(createActivityLogDto);
+      return successResponse(
+        HttpStatus.CREATED,
+        ResponseMessage.SUCCESS,
+        activityLog
+      );
+    } catch (err: any) {
+      return errorResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        ResponseMessage.INTERNAL_SERVER_ERROR,
+        err.message
+      );
+    }
+  }
 
   async getAllActivityLog(activityLogDto: ActivityLogDto): Promise<any> {
     const {

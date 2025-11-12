@@ -108,13 +108,13 @@ export class UserService {
   }
 
   async userProfile(payload) {
-    const mongoId = toMongoObjectId({ value: payload.id, key: 'id' });
+    const mongoId = toMongoObjectId({ value: payload.userId, key: 'id' });
     if (!mongoId) {
       throw new BadRequestException('Invalid User ID format');
     }
     const pipeline = [{ $match: { _id: mongoId } }, ...getUserLookup()];
     try {
-      const [res] = await this.userRepository.aggregate(pipeline);
+      const res = await this.userRepository.aggregate(pipeline);
       return successResponse(HttpStatus.OK, ResponseMessage.SUCCESS, res);
     } catch (err: any) {
       return errorResponse(

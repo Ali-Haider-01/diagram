@@ -10,6 +10,7 @@ import { ActivityLogInterceptor } from '../interceptors/activity-log.interceptor
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ActivityLogController } from './common/controllers/activity-log.controllers';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 
 const schemaObject = {
@@ -51,6 +52,7 @@ const schemaObject = {
         secret: config.get<string>('JWT_KEY'),
       }),
     }),
+    EventEmitterModule.forRoot()
   ],
   controllers: [
     UserController,

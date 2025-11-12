@@ -3,19 +3,19 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-  Logger,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { ActivityLogRepository } from '@diagram/shared';
+import { MESSAGE_PATTERNS } from '@diagram/shared';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+const { ACTIVITY_LOGGED_EVENT } = MESSAGE_PATTERNS.ACTIVITY_LOG;
 
 @Injectable()
 export class ActivityLogInterceptor implements NestInterceptor {
-  private readonly logger = new Logger(ActivityLogInterceptor.name);
 
   constructor(
-    private readonly activityLogRepository: ActivityLogRepository
+    private eventEmitter: EventEmitter2
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -78,13 +78,10 @@ export class ActivityLogInterceptor implements NestInterceptor {
 
   private async logActivity(activityData: any, error: any): Promise<void> {
     try {
-      await this.activityLogRepository.create(activityData);
+      await this.eventEmitter.emit(ACTIVITY_LOGGED_EVENT, activityData);
     } catch (err) {
-      // Log error but don't fail the request
-      this.logger.error(
-        `Failed to log activity: ${err.message}`,
-        err.stack
-      );
+      console.error('Interceptor activityLoggedEvent error:', error);
+      throw error;
     }
   }
 

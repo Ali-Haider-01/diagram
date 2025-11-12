@@ -99,7 +99,9 @@ export class UserController {
   @ApiCreatedResponse({ type: GetUserProfileRequestResponse })
   async getProfile(@Request() req) {
     try {
+      console.log('req.user',req.user)
       return await firstValueFrom(this.userClient.send(GET_PROFILE, req.user));
+
     } catch (error) {
       console.error('Gateway getProfile error:', error);
       throw error;

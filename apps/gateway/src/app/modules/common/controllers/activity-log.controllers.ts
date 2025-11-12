@@ -13,8 +13,9 @@ import {
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { ClientRMQ } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { OnEvent } from '@nestjs/event-emitter';
 
-const { GET_ALL_ACTIVITIES,GET_MOST_VISITED_API,GET_MOST_VISITED_USER } = MESSAGE_PATTERNS.ACTIVITY_LOG;
+const { GET_ALL_ACTIVITIES,GET_MOST_VISITED_API,GET_MOST_VISITED_USER,CREATE_ACTIVITY_LOG,ACTIVITY_LOGGED_EVENT } = MESSAGE_PATTERNS.ACTIVITY_LOG;
 
 @ApiTags('activity-log')
 @Controller()
@@ -35,6 +36,7 @@ export class ActivityLogController {
       throw error;
     }
   }
+  
   @Get('/get-most-visited-api')
   async getMostVisitedApi() {
     try {
@@ -46,6 +48,7 @@ export class ActivityLogController {
       throw error;
     }
   }
+
   @Get('/get-most-visited-user')
   async getMostVisitedUser() {
     try {
@@ -54,6 +57,21 @@ export class ActivityLogController {
       );
     } catch (error) {
       console.error('Gateway getMostVisitedUser error:', error);
+      throw error;
+    }
+  }
+
+  @OnEvent(ACTIVITY_LOGGED_EVENT, { async: true })
+  async handleActivityLoggedEvent(activityData: Record<string, any>) {
+    try {
+      await firstValueFrom(
+        this.activityLogClient.send(
+          CREATE_ACTIVITY_LOG,
+          activityData
+        )
+      );
+    } catch (error) {
+      console.error('Gateway activityLoggedEvent error:', error);
       throw error;
     }
   }
